@@ -73,7 +73,8 @@ class StorageCommands extends Command {
 			for($i = 1; $i <= $query->post_count; $i++) {
 				$postId = $query->posts[$i - 1];
 				$upload_file = get_attached_file($postId);
-				$fileName = basename($upload_file);
+
+				$fileName = ($upload_file);
 
 				Command::Info("%w[%C{$i}%w of %C{$query->post_count}%w] %NImporting %Y$fileName%N %w(%N$postId%w)%N ... ");
 				$storageTool->processImport($i - 1, $postId, $pd);

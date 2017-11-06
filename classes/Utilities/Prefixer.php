@@ -121,7 +121,7 @@ final class Prefixer {
 	private function parsePrefix($prefix, $id = null) {
 		$host = parse_url(get_home_url(), PHP_URL_HOST);
 
-		$user = wp_get_current_user();
+		$user = 'qdqmedia';
 		$userName = '';
 		if($user->ID != 0) {
 			$userName = sanitize_title($user->display_name);

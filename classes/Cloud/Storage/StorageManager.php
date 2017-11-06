@@ -48,7 +48,7 @@ final class StorageManager {
 
 	public static function driver() {
 		if (!self::$driver) {
-			self::$driver = EnvironmentOptions::Option('ilab-media-storage-provider','ILAB_CLOUD_STORAGE_PROVIDER', 's3');
+			self::$driver = EnvironmentOptions::Option('ilab-media-storage-provider','ILAB_CLOUD_STORAGE_PROVIDER', 'minio');
 		}
 
 		return self::$driver;

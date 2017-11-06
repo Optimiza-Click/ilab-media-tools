@@ -386,6 +386,7 @@ class StorageTool extends ToolBase {
 	 * @return array
 	 */
 	public function handleUpload($upload, $context = 'upload') {
+
 		if(!isset($upload['file'])) {
 			return $upload;
 		}
@@ -412,6 +413,7 @@ class StorageTool extends ToolBase {
 			$pi = pathinfo($upload['file']);
 
 			$upload_info = wp_upload_dir();
+
 			$upload_path = $upload_info['basedir'];
 
 			$file = trim(str_replace($upload_path, '', $pi['dirname']), '/').'/'.$pi['basename'];
@@ -1200,7 +1202,7 @@ class StorageTool extends ToolBase {
                 }
             }
         }
-        
+
         foreach($replacements as $id => $src) {
 		    $meta = wp_get_attachment_metadata($id);
 		    $url = $this->getAttachmentURLFromMeta($meta);
@@ -1826,7 +1828,7 @@ class StorageTool extends ToolBase {
 	    $prefix = StorageSettings::prefix(null);
         $parts = explode('/', $filename);
         $bucketFilename = array_pop($parts);
-
+var_dump($bucketFilename);die();
 		if($this->client && $this->client->enabled()) {
 			try {
 				return $this->client->uploadUrl($prefix.$bucketFilename, StorageSettings::privacy(), StorageSettings::cacheControl(), StorageSettings::expires());

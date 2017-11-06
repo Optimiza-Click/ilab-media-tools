@@ -56,6 +56,13 @@ final class EnvironmentOptions {
 			return $default;
 		}
 
-		return get_option($optionName, $default);
+		if ( is_multisite() ) {
+			return get_blog_option('1', $optionName, $default);
+		}
+		else
+		{
+			return get_option($optionName, $default);
+		}
+
 	}
 }

@@ -26,6 +26,7 @@ use function ILAB\MediaCloud\Utilities\arrayPath;
 if (!defined( 'ABSPATH')) { header( 'Location: /'); die; }
 
 class MinioStorage extends OtherS3Storage {
+
 	//region Properties
 
 	//endregion
@@ -54,7 +55,7 @@ class MinioStorage extends OtherS3Storage {
 		$key = implode('/', $keyParts).'/';
 
 		$instance = new self();
-		return $instance->endpoint.'/minio/'.$bucket.'/'.$key;
+		return $instance->endpoint.'/minio/'.$key;
 	}
 	//endregion
 

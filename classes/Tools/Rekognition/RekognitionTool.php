@@ -76,7 +76,6 @@ class RekognitionTool extends ToolBase {
 		parent::__construct($toolName, $toolInfo, $toolManager);
 
 		new RekognizerProcess();
-
 		$this->key = $this->getOption('ilab-media-s3-access-key', 'ILAB_AWS_S3_ACCESS_KEY');
 		$this->secret = $this->getOption('ilab-media-s3-secret', 'ILAB_AWS_S3_ACCESS_SECRET');
 		$this->region = $this->getOption('ilab-media-s3-rekognition-region', 'ILAB_AWS_REKOGNITION_REGION', false);
