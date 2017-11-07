@@ -67,6 +67,14 @@ class S3Storage implements StorageInterface {
 
 	//region Constructor
 	public function __construct() {
+		if(is_multisite())
+		{
+			$this->bucket = IMAGES_CLOUD_AWS_S3_BUCKET;
+			$this->key = IMAGES_CLOUD_AWS_S3_ACCESS_KEY;
+			$this->secret = IMAGES_CLOUD_AWS_S3_ACCESS_SECRET;
+		}
+		else
+		{
 		$this->bucket = EnvironmentOptions::Option('ilab-media-s3-bucket', [
 			'ILAB_AWS_S3_BUCKET',
 			'ILAB_CLOUD_BUCKET'
@@ -82,6 +90,7 @@ class S3Storage implements StorageInterface {
 			'ILAB_CLOUD_ACCESS_SECRET'
 		]);
 
+		}
 		$thisClass = get_class($this);
 
 		if(StorageManager::driver() == 's3') {
@@ -90,10 +99,15 @@ class S3Storage implements StorageInterface {
 			if ($thisClass::endpoint() !== null) {
 				$this->endpoint = $thisClass::endpoint();
 			} else {
-				$this->endpoint = EnvironmentOptions::Option('ilab-media-s3-endpoint', [
-					'ILAB_AWS_S3_ENDPOINT',
-					'ILAB_CLOUD_ENDPOINT'
-				], false);
+				if(is_multisite()) {
+					$this->endpoint = IMAGES_CLOUD_AWS_S3_ENDPOINT;
+				}
+				else {
+					$this->endpoint = EnvironmentOptions::Option('ilab-media-s3-endpoint', [
+						'ILAB_AWS_S3_ENDPOINT',
+						'ILAB_CLOUD_ENDPOINT'
+					], false);
+				}
 			}
 
 			if(!empty($this->endpoint)) {
@@ -110,6 +124,7 @@ class S3Storage implements StorageInterface {
 					'ILAB_CLOUD_ENDPOINT_PATH_STYLE'
 				], true);
 			}
+
 		}
 
 		$this->settingsError = get_option($this->settingsErrorOptionName(), false);

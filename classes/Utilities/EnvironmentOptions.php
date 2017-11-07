@@ -57,7 +57,7 @@ final class EnvironmentOptions {
 		}
 
 		if ( is_multisite() ) {
-			return get_blog_option('1', $optionName, $default);
+			return get_blog_option( '1', $optionName, $default );
 		}
 		else
 		{
