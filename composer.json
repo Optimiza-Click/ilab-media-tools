@@ -1,7 +1,14 @@
 {
-  "name" : "ilab/ilab-media-tools",
+  "name" : "optimiza/ilab-media-tools",
   "description": "Tools for cropping, uploading to S3, serving through Imgix",
   "type": "wordpress-plugin",
+  "require": {
+    "php": ">=5.4.16",
+    "composer/installers" : "~1.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "*"
+  },
   "license": "LGPL",
   "keywords": ["s3","imgix","cropping", "wordpress"],
   "repositories": [{
@@ -32,3 +39,4 @@
     ]
   }
 }
+
