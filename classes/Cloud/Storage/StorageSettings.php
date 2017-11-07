@@ -20,7 +20,10 @@ use ILAB\MediaCloud\Utilities\EnvironmentOptions;
 use ILAB\MediaCloud\Utilities\NoticeManager;
 use ILAB\MediaCloud\Utilities\Prefixer;
 
-if (!defined('ABSPATH')) { header('Location: /'); die; }
+if ( ! defined( 'ABSPATH' ) ) {
+	header( 'Location: /' );
+	die;
+}
 
 final class StorageSettings {
 	//region Class variables
@@ -59,40 +62,60 @@ final class StorageSettings {
 	//endregion
 
 	//region Constructor
-	private function  __construct() {
-		$this->deleteOnUpload = EnvironmentOptions::Option('ilab-media-s3-delete-uploads');
-		$this->deleteFromStorage = EnvironmentOptions::Option('ilab-media-s3-delete-from-s3');
-		$this->prefixFormat = EnvironmentOptions::Option('ilab-media-s3-prefix', '');
-		$this->uploadDocuments = EnvironmentOptions::Option('ilab-media-s3-upload-documents', null, true);
-		$this->privacy = EnvironmentOptions::Option('ilab-media-s3-privacy', null, "public-read");
-		if(!in_array($this->privacy, ['public-read', 'authenticated-read'])) {
-			NoticeManager::instance()->displayAdminNotice('error', "Your AWS S3 settings are incorrect.  The ACL '{$this->privacy}' is not valid.  Defaulting to 'public-read'.");
+	private function __construct() {
+		$this->deleteOnUpload
+			= EnvironmentOptions::Option( 'ilab-media-s3-delete-uploads' );
+		$this->deleteFromStorage
+			= EnvironmentOptions::Option( 'ilab-media-s3-delete-from-s3' );
+		if ( is_multisite() ) {
+			$this->prefixFormat = IMAGES_CLOUD_AWS_S3_PREFIX_BY_REPLACE;
+		} else {
+			$this->prefixFormat
+				= EnvironmentOptions::Option( 'ilab-media-s3-prefix', '' );
+		}
+		$this->uploadDocuments
+			           = EnvironmentOptions::Option( 'ilab-media-s3-upload-documents',
+			null, true );
+		$this->privacy = EnvironmentOptions::Option( 'ilab-media-s3-privacy',
+			null, "public-read" );
+		if ( ! in_array( $this->privacy,
+			[ 'public-read', 'authenticated-read' ] ) ) {
+			NoticeManager::instance()->displayAdminNotice( 'error',
+				"Your AWS S3 settings are incorrect.  The ACL '{$this->privacy}' is not valid.  Defaulting to 'public-read'." );
 			$this->privacy = 'public-read';
 		}
 
-		$ignored = EnvironmentOptions::Option('ilab-media-s3-ignored-mime-types', null, '');
-		$ignored_lines = explode("\n", $ignored);
-		if(count($ignored_lines) <= 1) {
-			$ignored_lines = explode(',', $ignored);
+		$ignored
+			           = EnvironmentOptions::Option( 'ilab-media-s3-ignored-mime-types',
+			null, '' );
+		$ignored_lines = explode( "\n", $ignored );
+		if ( count( $ignored_lines ) <= 1 ) {
+			$ignored_lines = explode( ',', $ignored );
 		}
-		foreach($ignored_lines as $d) {
-			if(!empty($d)) {
-				$this->ignoredMimeTypes[] = trim($d);
+		foreach ( $ignored_lines as $d ) {
+			if ( ! empty( $d ) ) {
+				$this->ignoredMimeTypes[] = trim( $d );
 			}
 		}
 
-		$this->cdn = EnvironmentOptions::Option('ilab-media-s3-cdn-base', 'ILAB_AWS_S3_CDN_BASE');
-		if($this->cdn) {
-			$this->cdn = rtrim($this->cdn, '/');
+		$this->cdn = EnvironmentOptions::Option( 'ilab-media-s3-cdn-base',
+			'ILAB_AWS_S3_CDN_BASE' );
+		if ( $this->cdn ) {
+			$this->cdn = rtrim( $this->cdn, '/' );
 		}
 
-		$this->docCdn = EnvironmentOptions::Option('ilab-doc-s3-cdn-base', 'ILAB_AWS_S3_DOC_CDN_BASE', $this->cdn);
+		$this->docCdn = EnvironmentOptions::Option( 'ilab-doc-s3-cdn-base',
+			'ILAB_AWS_S3_DOC_CDN_BASE', $this->cdn );
 
-		$this->cacheControl = EnvironmentOptions::Option('ilab-media-s3-cache-control', 'ILAB_AWS_S3_CACHE_CONTROL');
+		$this->cacheControl
+			= EnvironmentOptions::Option( 'ilab-media-s3-cache-control',
+			'ILAB_AWS_S3_CACHE_CONTROL' );
 
-		$expires = EnvironmentOptions::Option('ilab-media-s3-expires', 'ILAB_AWS_S3_EXPIRES');
-		if(!empty($expires)) {
-			$this->expires = gmdate('D, d M Y H:i:s \G\M\T', time() + ($expires * 60));
+		$expires = EnvironmentOptions::Option( 'ilab-media-s3-expires',
+			'ILAB_AWS_S3_EXPIRES' );
+		if ( ! empty( $expires ) ) {
+			$this->expires = gmdate( 'D, d M Y H:i:s \G\M\T',
+				time() + ( $expires * 60 ) );
 		}
 	}
 
@@ -100,7 +123,7 @@ final class StorageSettings {
 	 * @return StorageSettings|null
 	 */
 	private static function instance() {
-		if (!self::$instance) {
+		if ( ! self::$instance ) {
 			self::$instance = new StorageSettings();
 		}
 
@@ -116,10 +139,11 @@ final class StorageSettings {
 
 	/**
 	 * @param int|null $id
+	 *
 	 * @return string
 	 */
-	public static function prefix($id = null) {
-		return Prefixer::Parse(self::prefixFormat(), $id);
+	public static function prefix( $id = null ) {
+		return Prefixer::Parse( self::prefixFormat(), $id );
 	}
 
 	/** @return string|null */
