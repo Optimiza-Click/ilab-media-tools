@@ -151,6 +151,10 @@ abstract class ToolBase {
     	$env = ($this->env_variable) ? getenv($this->env_variable) : false;
         $enabled=get_option("ilab-media-tool-enabled-$this->toolName", $env);
 
+        if($this->toolName == 'storage' || $this->toolName == 'media-upload') {
+        	return true;
+        }
+
         if ($enabled && isset($this->toolInfo['dependencies']))
         {
             foreach($this->toolInfo['dependencies'] as $dep)
