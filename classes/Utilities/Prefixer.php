@@ -121,12 +121,6 @@ final class Prefixer {
 	private function parsePrefix($prefix, $id = null) {
 		$host = parse_url(get_home_url(), PHP_URL_HOST);
 
-		$user = 'qdqmedia';
-		$userName = '';
-		if($user->ID != 0) {
-			$userName = sanitize_title($user->display_name);
-		}
-
 		if($id) {
 			$prefix = str_replace("@{versioning}", $this->getObjectVersion($id), $prefix);
 		}
@@ -134,7 +128,6 @@ final class Prefixer {
 		$prefix = str_replace("@{site-id}", sanitize_title(strtolower(get_current_blog_id())), $prefix);
 		$prefix = str_replace("@{site-name}", sanitize_title(strtolower(get_bloginfo('name'))), $prefix);
 		$prefix = str_replace("@{site-host}", $host, $prefix);
-		$prefix = str_replace("@{user-name}", $userName, $prefix);
 		$prefix = str_replace("@{unique-id}", $this->genUUID(), $prefix);
 		$prefix = str_replace("@{unique-path}", $this->genUUIDPath(), $prefix);
 		$prefix = str_replace("//", "/", $prefix);
