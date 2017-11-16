@@ -1,5 +1,5 @@
 {
-  "name" : "optimiza/ilab-media-tools",
+  "name" : "optimiza/media-cloud-aws",
   "description": "Tools for cropping, uploading to S3, serving through Imgix",
   "type": "wordpress-plugin",
   "require": {
