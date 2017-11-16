@@ -523,5 +523,5 @@ abstract class BackgroundProcess extends AsyncRequest {
 	 */
 	abstract public function task( $item );
 
-	abstract public static function cancelAll();
+//	abstract public static function cancelAll();
 }

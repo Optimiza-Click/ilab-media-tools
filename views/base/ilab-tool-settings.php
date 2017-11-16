@@ -19,7 +19,7 @@
             <strong>Requires:</strong>
 		    <?php
 		    $required=[];
-		    foreach($tool->toolInfo['dependencies'] as $dep) {
+		    /*foreach($tool->toolInfo['dependencies'] as $dep) {
 			    if (is_array($dep)) {
 				    $depTitles = [];
 				    foreach($dep as $toolDep){
@@ -30,7 +30,7 @@
 			    } else {
 				    $required[]=$manager->tools[$dep]->toolInfo['title'];
 			    }
-		    }
+		    } */
 		    $required=implode(', ',$required);
 		    ?>
             {{$required}}

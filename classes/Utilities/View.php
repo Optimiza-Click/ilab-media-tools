@@ -95,6 +95,7 @@ class View {
         extract($data);
 
         ob_start();
+
         eval("?>".trim($fragment));
         $result=ob_get_contents();
         ob_end_clean();
