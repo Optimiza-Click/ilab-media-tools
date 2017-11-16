@@ -1,11 +1,11 @@
 <?php
 /*
-Plugin Name: Media Cloud
-Plugin URI: http://interfacelab.com/media-tools
+Plugin Name: MediaCloud AWS
+Plugin URI: https://github.com/Optimiza-Click/media-cloud-aws
 Description: Automatically upload media to Amazon S3 and integrate with Imgix, a real-time image processing CDN.  Boosts site performance and simplifies workflows.
-Author: interfacelab
-Version: 2.1.0
-Author URI: http://interfacelab.io
+Author: QDQ Media
+Version: 1.0.0
+Author URI: https://github.com/Optimiza-Click/media-cloud-aws
 */
 
 // Copyright (c) 2016 Interfacelab LLC. All rights reserved.
