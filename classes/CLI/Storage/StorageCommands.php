@@ -102,42 +102,49 @@ class StorageCommands extends Command {
 			return;
 		}
 
-		$postArgs = [
-			'post_type' => 'attachment',
-			'post_status' => 'inherit',
-			'nopaging' => true,
-			'post_mime_type' => 'image',
-			'fields' => 'ids',
-		];
+		$siteId = isset($args[0]) ? ['site__in' => $args[0]] : [];
 
-		$query = new \WP_Query($postArgs);
+        $sites = get_sites($siteId);
 
-		if($query->post_count > 0) {
-			update_option('ilab_cloud_regenerate_status', true);
-			update_option('ilab_cloud_regenerate_total_count', $query->post_count);
-			update_option('ilab_cloud_regenerate_current', 1);
-			update_option('ilab_cloud_regenerate_should_cancel', false);
+        foreach($sites as $site) {
+            switch_to_blog($site->blog_id);
 
-			Command::Info("Total posts found: %Y{$query->post_count}.", true);
+            $postArgs = [
+                'post_type'      => 'attachment',
+                'post_status'    => 'inherit',
+                'nopaging'       => true,
+                'post_mime_type' => 'image',
+                'fields'         => 'ids',
+            ];
 
-			$pd = new DefaultProgressDelegate();
+            $query = new \WP_Query($postArgs);
 
-			for($i = 1; $i <= $query->post_count; $i++) {
-				$postId = $query->posts[$i - 1];
-				$upload_file = get_attached_file($postId);
-				$fileName = basename($upload_file);
+            if ($query->post_count > 0) {
+                update_option('ilab_cloud_regenerate_status', true);
+                update_option('ilab_cloud_regenerate_total_count', $query->post_count);
+                update_option('ilab_cloud_regenerate_current', 1);
+                update_option('ilab_cloud_regenerate_should_cancel', false);
 
-				update_option('ilab_cloud_regenerate_current_file', $fileName);
-				update_option('ilab_cloud_regenerate_current', $i);
+                Command::Info("Total posts found: %Y{$query->post_count}.", true);
 
-				Command::Info("%w[%C{$i}%w of %C{$query->post_count}%w] %NRegenerating thumbnails for %Y$fileName%N %w(%N$postId%w)%N ... ");
-				$storageTool->regenerateFile($postId);
-				Command::Info("%YDone%N.", true);
-			}
+                $pd = new DefaultProgressDelegate();
 
-			delete_option('ilab_cloud_regenerate_status');
-		}
+                for ($i = 1; $i <= $query->post_count; $i++) {
+                    $postId      = $query->posts[$i - 1];
+                    $upload_file = get_attached_file($postId);
+                    $fileName    = basename($upload_file);
 
+                    update_option('ilab_cloud_regenerate_current_file', $fileName);
+                    update_option('ilab_cloud_regenerate_current', $i);
+
+                    Command::Info("%w[%C{$i}%w of %C{$query->post_count}%w] %NRegenerating thumbnails for %Y$fileName%N %w(%N$postId%w)%N ... ");
+                    $storageTool->regenerateFile($postId);
+                    Command::Info("%YDone%N.", true);
+                }
+
+                delete_option('ilab_cloud_regenerate_status');
+            }
+        }
 	}
 
 	public static function Register() {
