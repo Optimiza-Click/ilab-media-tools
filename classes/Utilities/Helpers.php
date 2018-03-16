@@ -11,7 +11,7 @@
 // **********************************************************************
 
 namespace ILAB\MediaCloud\Utilities {
-	if (!defined('ABSPATH')) { header('Location: /'); die; }
+	
 
 	/**
 	 * Brute force debug tool
