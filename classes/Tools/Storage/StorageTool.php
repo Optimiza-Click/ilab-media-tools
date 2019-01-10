@@ -1419,6 +1419,8 @@ class StorageTool extends ToolBase {
     public function regenerateFile($postId) {
 	    @set_time_limit(120);
 
+	    $this->resizeImage($postId);
+
 	    $fullsizepath = get_attached_file( $postId );
 	    if (!file_exists($fullsizepath)) {
 		    $fullsizepath = _load_image_to_edit_path($postId);
@@ -1456,6 +1458,10 @@ class StorageTool extends ToolBase {
 	    return true;
     }
 
+    private function resizeImage($post)
+    {
+
+    }
 	/**
 	 * Ajax endpoint for regenerating a single file
 	 */
