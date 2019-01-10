@@ -1419,6 +1419,8 @@ class StorageTool extends ToolBase {
     public function regenerateFile($postId) {
 	    @set_time_limit(120);
 
+	    $this->resizeImage($postId);
+
 	    $fullsizepath = get_attached_file( $postId );
 	    if (!file_exists($fullsizepath)) {
 		    $fullsizepath = _load_image_to_edit_path($postId);
@@ -1448,12 +1450,19 @@ class StorageTool extends ToolBase {
 	    }
 
 	    Logger::startTiming('Regenerating metadata ...', ['id' => $postId]);
+
+	    $this->
 	    $metadata = wp_generate_attachment_metadata( $postId, $fullsizepath );
 	    Logger::endTiming('Regenerating metadata ...', ['id' => $postId]);
 
 	    wp_update_attachment_metadata($postId, $metadata);
 
 	    return true;
+    }
+
+
+    private function resizeImage() {
+
     }
 
 	/**
