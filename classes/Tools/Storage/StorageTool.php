@@ -13,6 +13,7 @@
 
 namespace ILAB\MediaCloud\Tools\Storage;
 
+use ILAB\MediaCloud\CLI\Command;
 use ILAB\MediaCloud\Cloud\Storage\FileInfo;
 use ILAB\MediaCloud\Cloud\Storage\StorageException;
 use ILAB\MediaCloud\Cloud\Storage\StorageInterface;
@@ -1419,8 +1420,6 @@ class StorageTool extends ToolBase {
     public function regenerateFile($postId) {
 	    @set_time_limit(120);
 
-	    $this->resizeImage($postId);
-
 	    $fullsizepath = get_attached_file( $postId );
 	    if (!file_exists($fullsizepath)) {
 		    $fullsizepath = _load_image_to_edit_path($postId);
@@ -1449,6 +1448,14 @@ class StorageTool extends ToolBase {
 		    }
 	    }
 
+	    if(ResizeImage::isBigger($fullsizepath)) {
+            Command::Info("Making resize of big image %Y$fullsizepath%N");
+
+            $resize = new ResizeImage($fullsizepath);
+            $resize->resizeTo($fullsizepath);
+            $resize->saveImage($fullsizepath);
+        }
+
 	    Logger::startTiming('Regenerating metadata ...', ['id' => $postId]);
 	    $metadata = wp_generate_attachment_metadata( $postId, $fullsizepath );
 	    Logger::endTiming('Regenerating metadata ...', ['id' => $postId]);
@@ -1458,10 +1465,6 @@ class StorageTool extends ToolBase {
 	    return true;
     }
 
-    private function resizeImage($post)
-    {
-
-    }
 	/**
 	 * Ajax endpoint for regenerating a single file
 	 */
