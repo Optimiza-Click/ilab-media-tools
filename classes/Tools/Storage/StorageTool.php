@@ -13,6 +13,7 @@
 
 namespace ILAB\MediaCloud\Tools\Storage;
 
+use ILAB\MediaCloud\CLI\Command;
 use ILAB\MediaCloud\Cloud\Storage\FileInfo;
 use ILAB\MediaCloud\Cloud\Storage\StorageException;
 use ILAB\MediaCloud\Cloud\Storage\StorageInterface;
@@ -1441,13 +1442,37 @@ class StorageTool extends ToolBase {
 			        return "File '$fullsizepath' could not be downloaded.";
                 }
 
+
 			    $fullsizepath = $filepath;
 		    } else {
 		        return "Local file '$fullsizepath' does not exist and is not a URL.";
 		    }
 	    }
 
+	    if(ResizeImage::isBigger($fullsizepath)) {
+            Command::Info("Making resize of big image %Y$fullsizepath%N");
+
+            //Generate new copy image
+            $info = wp_get_attachment_metadata($postId);
+            $originalS3Image = ($info['s3']);
+
+            $info = (pathinfo($originalS3Image['key']));
+
+            $newS3Image = $info['dirname'].'/'.$info['filename'].'-full-size.'.$info['extension'];
+
+             $this->client->copy(
+                $originalS3Image['key'],
+                $newS3Image,
+                $originalS3Image['privacy']
+            );
+
+            $resize = new ResizeImage($fullsizepath);
+            $resize->resizeTo($fullsizepath);
+            $resize->saveImage($fullsizepath);
+        }
+
 	    Logger::startTiming('Regenerating metadata ...', ['id' => $postId]);
+
 	    $metadata = wp_generate_attachment_metadata( $postId, $fullsizepath );
 	    Logger::endTiming('Regenerating metadata ...', ['id' => $postId]);
 
@@ -1828,7 +1853,6 @@ class StorageTool extends ToolBase {
 	    $prefix = StorageSettings::prefix(null);
         $parts = explode('/', $filename);
         $bucketFilename = array_pop($parts);
-var_dump($bucketFilename);die();
 		if($this->client && $this->client->enabled()) {
 			try {
 				return $this->client->uploadUrl($prefix.$bucketFilename, StorageSettings::privacy(), StorageSettings::cacheControl(), StorageSettings::expires());
