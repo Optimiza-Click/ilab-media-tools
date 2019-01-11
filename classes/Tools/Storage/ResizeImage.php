@@ -66,7 +66,7 @@ class ResizeImage
      * @param  string $imageQuality 	  - The qulaity level of image to create
      *
      */
-    public function saveImage($savePath, $imageQuality="90", $download = false)
+    public function saveImage($savePath, $imageQuality="85", $download = false)
     {
         switch($this->ext)
         {
@@ -108,7 +108,7 @@ class ResizeImage
     {
         list($this->origWidth, $this->origHeight) = getimagesize($path);
 
-        $percent = (1920 / $this->origWidth);
+        $percent = (1920.0 / $this->origWidth);
 
         $this->resizeWidth = $this->origWidth * $percent;
         $this->resizeHeight = $this->origHeight * $percent;
@@ -121,10 +121,6 @@ class ResizeImage
     {
         $width = getimagesize($path)[0];
 
-        if($width <= 1920) {
-            return false;
-        }
-
-        return true;
+        return $width <= 1920 ? false : true;
     }
 }
