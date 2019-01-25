@@ -102,7 +102,7 @@ class StorageCommands extends Command {
 			return;
 		}
 
-		$siteId = isset($args[0]) ? ['site__in' => $args[0]] : [];
+		$siteId = isset($assoc_args['site_id']) ? ['site__in' => $assoc_args['site_id']] : [];
 
         $sites = get_sites($siteId);
 
@@ -116,6 +116,11 @@ class StorageCommands extends Command {
                 'post_mime_type' => 'image',
                 'fields'         => 'ids',
             ];
+
+            if(isset($assoc_args['days_filter'])) {
+                $days = $assoc_args['days_filter'];
+                $postArgs['date_query'] = ['after' => "-$days days"];
+            }
 
             $query = new \WP_Query($postArgs);
 
